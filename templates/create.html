@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create New Post</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1; --bg-body: #0f172a; --bg-surface: #1e293b;
+            --bg-input: #020617; --text-main: #f1f5f9; --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); display: flex; justify-content: center; padding-top: 50px; margin: 0; }
+
+        .card { background: var(--bg-surface); padding: 2rem; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; max-width: 600px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h1 { margin-top: 0; color: var(--text-main); }
+
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: var(--text-main); }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); color: white; border-radius: 8px; box-sizing: border-box; font-family: inherit;}
+        input:focus, textarea:focus { outline: none; border-color: var(--primary); }
+
+        .actions { display: flex; justify-content: space-between; align-items: center; }
+        button { background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #818cf8; }
+        a { color: var(--text-muted); text-decoration: none; }
+        a:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>✍️ New Post</h1>
+        <form method="post">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" value="{{ request.form['title'] }}" required placeholder="Заголовок...">
+
+            <label for="content">Content</label>
+            <textarea name="content" id="content" rows="8" placeholder="Текст поста...">{{ request.form['content'] }}</textarea>
+
+            <div class="actions">
+                <a href="{{ url_for('index') }}">← Скасувати</a>
+                <button type="submit">Опублікувати</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

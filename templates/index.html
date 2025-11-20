@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flask Blog & Wallet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1; --primary-hover: #818cf8;
+            --bg-body: #0f172a; --bg-surface: #1e293b; --bg-input: #020617;
+            --text-main: #f1f5f9; --text-muted: #94a3b8;
+            --border-color: #334155;
+            --danger: #f87171; --danger-bg: rgba(239, 68, 68, 0.1);
+            --success: #34d399; --success-bg: rgba(16, 185, 129, 0.1);
+            --warning: #fbbf24; --warning-bg: rgba(245, 158, 11, 0.1);
+        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding-bottom: 60px; }
+
+        /* Навігація */
+        nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-color); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        nav h1 { margin: 0; color: var(--primary); font-size: 1.5rem; font-weight: 800; }
+        .nav-actions { display: flex; gap: 20px; align-items: center; }
+
+        .wallet-badge { background: var(--success-bg); color: var(--success); padding: 6px 16px; border-radius: 50px; border: 1px solid rgba(16, 185, 129, 0.2); font-weight: 600; display: flex; gap: 10px; align-items: center; }
+        .reset-btn { background: none; border: none; cursor: pointer; font-size: 1.2rem; padding: 0; color: var(--success); transition: 0.3s; }
+        .reset-btn:hover { transform: rotate(180deg); }
+
+        .btn-new { background: var(--primary); color: white; text-decoration: none; padding: 8px 20px; border-radius: 8px; font-weight: 500; transition: 0.2s; }
+        .btn-new:hover { background: var(--primary-hover); }
+
+        /* Контейнер */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .flash { max-width: 1200px; margin: 1rem auto; padding: 1rem; background: var(--warning-bg); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; }
+
+        /* Пости */
+        h2 { color: var(--text-muted); font-size: 1rem; text-transform: uppercase; margin-bottom: 1.5rem; }
+        .post-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; transition: 0.3s; }
+        .post-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .post-header h3 { margin: 0 0 0.5rem 0; font-size: 1.4rem; color: var(--text-main); }
+        .post-date { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; }
+        .post-content { color: #cbd5e1; margin-bottom: 1.5rem; line-height: 1.6; }
+
+        .post-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color); }
+        .donations-tag { color: var(--warning); font-weight: 700; background: var(--warning-bg); padding: 5px 12px; border-radius: 6px; font-size: 0.9rem; }
+
+        .btn-group { display: flex; gap: 10px; }
+        .btn { border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn-donate { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .btn-donate:hover { background: rgba(16, 185, 129, 0.3); }
+        .btn-delete { background: transparent; color: var(--danger); border: 1px solid var(--danger-bg); }
+        .btn-delete:hover { background: var(--danger-bg); }
+
+        /* Сайдбар */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .sidebar-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; }
+        .sidebar-box h3 { margin-top: 0; font-size: 0.9rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; }
+        .log-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .log-item { font-size: 0.9rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px; color: var(--text-muted); }
+        .log-time { color: var(--primary); font-weight: 700; font-size: 0.75rem; display: block; margin-bottom: 3px; }
+
+        /* Стилі для архіву та кнопки відновлення */
+        .archived-item { display: flex; justify-content: space-between; align-items: flex-start; }
+        .restore-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; color: var(--success); padding: 0; opacity: 0.7; transition: 0.2s; }
+        .restore-btn:hover { opacity: 1; transform: scale(1.2); }
+
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1>Flask Blog</h1>
+            <div class="nav-actions">
+                <div class="wallet-badge">
+                    <span>${{ wallet_balance }}</span>
+                    <form action="{{ url_for('reset_wallet') }}" method="post" style="margin:0; display:flex;">
+                        <button type="submit" class="reset-btn" title="Скинути">🔄</button>
+                    </form>
+                </div>
+                <a href="{{ url_for('create') }}" class="btn-new">+ New Post</a>
+            </div>
+        </div>
+    </nav>
+
+    {% for message in get_flashed_messages() %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+
+    <div class="container">
+        <main>
+            <h2>Останні публікації</h2>
+            {% for post in posts %}
+                <article class="post-card">
+                    <div class="post-header">
+                        <h3>{{ post['title'] }}</h3>
+                        <div class="post-date">📅 {{ post['created'].strftime('%d %b %Y, %H:%M') }}</div>
+                    </div>
+                    <div class="post-content">{{ post['content'] | safe }}</div>
+                    <div class="post-footer">
+                        <div class="donations-tag">🏆 ${{ post['donations'] }}</div>
+                        <div class="btn-group">
+                            <form action="{{ url_for('donate', id=post['id']) }}" method="post">
+                                <button type="submit" class="btn btn-donate">💸 Donate $100</button>
+                            </form>
+
+                            <!-- ФОРМА ВИДАЛЕННЯ З ПАРОЛЕМ -->
+                            <form action="{{ url_for('delete', id=post['id']) }}" method="post"
+                                  onsubmit="let p = prompt('Введіть пароль адміністратора для архівації:');
+                                            if (p == null || p == '') return false;
+                                            this.password.value = p;
+                                            return true;">
+
+                                <!-- Приховане поле для пароля -->
+                                <input type="hidden" name="password">
+
+                                <button type="submit" class="btn btn-delete">🔒 Archive</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            {% else %}
+                <div class="post-card" style="text-align: center; padding: 30px;">
+                    <p style="color: var(--text-muted);">Постів немає.</p>
+                </div>
+            {% endfor %}
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-box">
+                <h3>📜 Audit Log</h3>
+                <div class="log-list">
+                    {% for log in logs %}
+                        <div class="log-item">
+                            <span class="log-time">{{ log['action_time'].strftime('%H:%M:%S') }}</span>
+                            {{ log['message'] }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="sidebar-box" style="border-left: 3px solid var(--danger);">
+                <h3>🗄 Archive</h3>
+                <div class="log-list">
+                    {% for del in deleted %}
+                        <div class="log-item archived-item">
+                            <div>
+                                <span class="log-time" style="color: var(--danger);">{{ del['deleted_at'].strftime('%H:%M:%S') }}</span>
+                                <b style="color: var(--text-muted);">{{ del['title'] }}</b><br>
+                                <small style="color: var(--text-muted);">Raised: ${{ del['final_donations'] }}</small>
+                            </div>
+
+
+                            <form action="{{ url_for('restore', id=del['id']) }}" method="post"
+                                  onsubmit="let p = prompt('Пароль для відновлення:');
+                                            if (p == null || p == '') return false;
+                                            this.password.value = p;
+                                            return true;">
+                                <input type="hidden" name="password">
+                                <button type="submit" class="restore-btn" title="Відновити пост">♻️</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>
