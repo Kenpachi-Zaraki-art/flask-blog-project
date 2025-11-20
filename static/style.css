@@ -1,0 +1,165 @@
+/* --- ЗМІННІ ТА НАЛАШТУВАННЯ (DARK THEME) --- */
+:root {
+    /* Основна палітра (Акцент) */
+    --primary: #6366f1;       /* Indigo 500 - яскравіший для темного фону */
+    --primary-hover: #818cf8; /* Indigo 400 */
+
+    /* Фонові кольори */
+    --bg-body: #0f172a;       /* Дуже темний сіро-синій */
+    --bg-surface: #1e293b;    /* Темний сіро-синій (для карток) */
+    --bg-input: #020617;      /* Майже чорний для полів вводу */
+
+    /* Текст */
+    --text-main: #f1f5f9;     /* Майже білий */
+    --text-muted: #94a3b8;    /* Світло-сірий */
+    --text-light: #64748b;    /* Темніший сірий */
+
+    /* Рамки */
+    --border-color: #334155;  /* Колір розділювачів */
+
+    /* Статуси (трохи приглушені кольори) */
+    --danger: #f87171;
+    --danger-bg: rgba(239, 68, 68, 0.1);
+    --danger-border: rgba(239, 68, 68, 0.2);
+
+    --success: #34d399;
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --success-border: rgba(16, 185, 129, 0.2);
+
+    --warning: #fbbf24;
+    --warning-bg: rgba(245, 158, 11, 0.1);
+    --warning-border: rgba(245, 158, 11, 0.2);
+
+    /* Тіні */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+    --radius: 12px;
+}
+
+/* --- БАЗОВІ СТИЛІ --- */
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    padding-bottom: 60px;
+    line-height: 1.6;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* Темний скролбар */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-body); }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 5px; border: 2px solid var(--bg-body); }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* --- НАВІГАЦІЯ --- */
+nav {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.025em;
+    text-shadow: 0 0 15px rgba(99, 102, 241, 0.3); /* Світіння тексту */
+}
+
+.nav-actions { display: flex; align-items: center; gap: 20px; }
+
+/* Бейдж гаманця */
+.wallet-badge {
+    background: var(--success-bg);
+    color: var(--success);
+    border: 1px solid var(--success-border);
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reset-btn {
+    background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0;
+    display: flex; align-items: center; color: var(--success); transition: transform 0.4s ease;
+}
+.reset-btn:hover { transform: rotate(180deg) scale(1.2); color: #6ee7b7; }
+
+.btn-new {
+    background: var(--primary);
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+.btn-new:hover { background: var(--primary-hover); box-shadow: 0 0 15px rgba(99, 102, 241, 0.6); transform: translateY(-1px); }
+
+/* --- МАКЕТ --- */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* --- FLASH ПОВІДОМЛЕННЯ --- */
+.flash {
+    max-width: 1200px; margin: 1.5rem auto; padding: 1rem 1.5rem;
+    background: rgba(245, 158, 11, 0.15);
+    color: #fcd34d;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-left: 4px solid var(--warning);
+    border-radius: 8px;
+}
+
+/* --- КАРТКИ --- */
+main h2 { color: var(--text-muted); text-transform: uppercase; font-size: 1rem; letter-spacing: 1px; margin-bottom: 1.5rem; }
+
+.post-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, border-color 0.3s;
+}
+
+.post-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary); /* Підсвітка рамки при наведенні */
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+.post-header h3 { margin: 0 0 0.5rem 0; font-size: 1.5rem; color: var(--text-main); }
+.post-date { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem; }
+.post-content { color: #cbd5e1; margin-bottom: 1.5rem; }
+
+.post-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 1.2rem; border-top: 1px solid var(--
