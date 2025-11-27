@@ -12,6 +12,10 @@
 
 Відновлення даних: Можливість повернути пост з архіву на сайт разом із усіма накопиченими донатами.
 
+<img width="1919" height="1029" alt="Image" src="https://github.com/user-attachments/assets/cdfddafc-cc1c-471e-af5e-c96f9f650b78" />
+
+<img width="742" height="531" alt="Image" src="https://github.com/user-attachments/assets/e0a2087b-5053-47cd-aef4-4489c6ba05f0" />
+
         **Фінансова Система**
 
 Гаманець користувача: Симуляція балансу, з якого списуються кошти.
@@ -41,6 +45,7 @@
 | `audit_log` | Журнал подій (заповнюється тригерами та транзакціями). |
 | `deleted_posts` | "Смітник" для архівованих постів (для Soft Delete). |
 
+<img width="1919" height="875" alt="Image" src="https://github.com/user-attachments/assets/3a9e15e2-e8de-47e8-8285-dd3b3241ddbc" />
         **SQL Особливості:**
 * Використання `SERIAL` для первинних ключів.
 * `CASCADE` видалення.
@@ -120,5 +125,6 @@ python main.py
 Денис Руденок
 
 Група: ІСД-31
+
 
 Курс: ОБЗД
